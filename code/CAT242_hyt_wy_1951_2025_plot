@@ -1,0 +1,98 @@
+# Code description ------------------------------------------------------------
+# Script developed by A.Chenette January 2025 to create a plot for hydrological year typing of runoff at LSR gage on Little Shasta River, water years 1951-2025
+# Estimated unimpaired runoff was downloaded from rivers.codefornature.org on 12/26/2025. 
+# Estimated unimpaired runoff is calculated as the monthly average flow. 
+# Hydrologic year types are calculated using tercile groupings to be consistent with the methods used in functional flow analyses.
+# Used for CAT242 Instream-flow dedication study.
+
+# Load Libraries -------------------------------------------------------------
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(ggpattern)
+
+# Load data ------------------------------------------------------------------
+file_path <- "C:/Users/AdrienneChenette/Desktop/flow_3917176_mean_estimated_1950_2025.xlsx"
+df <- read_excel(file_path, sheet = 1)
+
+# Ensure WaterYear is numeric --------------------------------------------------------------
+df <- df %>%
+  mutate(WaterYear = as.numeric(WaterYear))
+
+# Convert to long format & drop missing values -------------------------------
+df_long <- df %>%
+  pivot_longer(
+    cols = c(Wet, Normal, Dry),
+    names_to = "Condition",
+    values_to = "Percent",
+    values_drop_na = TRUE
+  ) %>%
+  mutate(
+    Percent = Percent * 100
+  )
+
+# Define years ---------------------------------------------------------------
+years <- sort(unique(df_long$WaterYear))
+label_years <- years[seq(1, length(years), by = 2)]  # every other year
+
+
+# Plot  ---------------------------------------------------------
+p <- ggplot(df_long, aes(x = WaterYear, y = Percent, fill = Condition, pattern = Condition)) +
+  geom_col_pattern(
+    width = 0.9,
+    pattern_fill = "black",
+    pattern_density = 0.1,
+    pattern_spacing = 0.01,
+    pattern_angle = 45,
+    colour = "gray30",
+    linewidth = 0.1
+  ) +
+  
+  scale_y_continuous(
+    breaks = seq(0, 250, 50),
+    labels = function(x) paste0(x, "%"),
+    expand = expansion(mult = c(0, 0.02))
+  ) +
+  
+  scale_x_continuous(
+    breaks = label_years,
+    labels = label_years,
+    expand = expansion(add = c(0.5, 0.5))
+  ) +
+  
+  scale_fill_manual(
+    values = c(
+      Wet = "#6EA6CD",
+      Normal = "#ACD39E",
+      Dry = "#F67E4B"
+    )
+  ) +
+  
+  scale_pattern_manual(
+    values = c(
+      Wet = "circle",
+      Normal = "none",
+      Dry = "stripe"
+    )
+  ) +
+  
+  labs(
+    x = "Water Year",
+    y = "Percent of Average (%)",
+    fill = NULL,
+    pattern = NULL
+  ) +
+  
+  theme_classic(base_size = 16) +
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, size = 12),
+    axis.text.y = element_text(size = 14),
+    axis.title = element_text(size = 14),
+    legend.position = "top",
+    axis.ticks.x = element_blank()
+  )
+
+print(p)
+
+
