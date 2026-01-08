@@ -95,4 +95,7 @@ p <- ggplot(df_long, aes(x = WaterYear, y = Percent, fill = Condition, pattern =
 
 print(p)
 
+ggsave(filename = "output/CAT242_hyt_wy_1951_2025_v4.png", dpi = 300, width = 8, height = 5, units = "in")
+
+
 
