@@ -22,7 +22,7 @@ df <- df |>
 # --- Ensure datetime is in proper format ---
 df$datetime <- as.POSIXct(df$datetime, tz = "UTC")
 
-# --- Filter data to 1/1/25 - 2/12/25 ---
+# --- Filter data to 10/23/24 - 2/26/25 ---
 df <- df |>
   filter(datetime >= as.POSIXct("2024-10-23", tz = "UTC") &
            datetime <= as.POSIXct("2025-02-26", tz = "UTC"))
@@ -74,10 +74,11 @@ ggplot(df, aes(x = datetime, y = discharge_cfs)) +
   ) +
   scale_x_datetime(
     date_labels = "%b %d",
-    breaks = seq(as.POSIXct("2025-01-01", tz = "UTC"),
-                 as.POSIXct("2025-02-12", tz = "UTC"),
-                 by = "7 days"),
+    breaks = seq(as.POSIXct("2024-10-23", tz = "UTC"),
+                 as.POSIXct("2025-02-26", tz = "UTC"),
+                 by = "14 days"),
     expand = c(0, 0)
   )
 
-ggsave(filename = "output/CAT242_LSR_obsv_wet_season_base_plot.png", dpi = 300, width = 8, height = 5, units = "in")
+ggsave(filename = "output/CAT242_LSR_obsv_wetseasonbase_PLOT.png", dpi = 300, width = 8, height = 5, units = "in")
+
