@@ -24,8 +24,8 @@ df$datetime <- as.POSIXct(df$datetime, tz = "UTC")
 
 # --- Filter data to 1/1/25 - 2/12/25 ---
 df <- df |>
-  filter(datetime >= as.POSIXct("2025-01-01", tz = "UTC") &
-           datetime <= as.POSIXct("2025-02-12", tz = "UTC"))
+  filter(datetime >= as.POSIXct("2024-10-23", tz = "UTC") &
+           datetime <= as.POSIXct("2025-02-26", tz = "UTC"))
 
 # --- Highlight window for Wet Season Baseflow ---
 highlight_start <- as.POSIXct("2025-01-26", tz = "UTC")
