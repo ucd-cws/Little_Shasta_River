@@ -75,3 +75,5 @@ ggplot(df, aes(x = datetime, y = discharge_cfs)) +
     expand = expansion(mult = c(0, 0.05))
   ) +
   scale_x_datetime(date_labels = "%b %d", date_breaks = "7 days")
+
+ggsave(filename = "output/CAT242_LSR_fallpulse_plot.png", dpi = 300, width = 8, height = 5, units = "in")
